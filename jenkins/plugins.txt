@@ -1,0 +1,13 @@
+workflow-step-api:latest
+structs:latest
+display-url-api:latest
+junit:latest
+script-security:latest
+workflow-scm-step:latest
+credentials:latest
+git-client:latest
+mailer:latest
+matrix-project:latest
+scm-api:latest
+ssh-credentials:latest
+git:latest
