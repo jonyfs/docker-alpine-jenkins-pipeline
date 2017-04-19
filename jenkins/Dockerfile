@@ -1,18 +1,30 @@
-FROM jenkins:alpine
+FROM jenkinsci/jenkins:alpine
 
 USER root
 
-RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+RUN apk add --update bash wget && rm -rf /var/cache/apk/*
+
+RUN MAVEN_VERSION=3.5.0 \
+ && cd /usr/share \
+ && wget http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz -O - | tar xzf - \
+ && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
+ && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+
+ENV MAVEN_HOME /usr/share/maven
+
 
 USER jenkins
 
-COPY plugins.txt /usr/share/jenkins/plugins.txt
+RUN /usr/local/bin/install-plugins.sh git matrix-auth workflow-aggregator docker-workflow blueocean credentials-binding
 
-RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+ENV JENKINS_USER admin
+ENV JENKINS_PASS admin
 
-# Copy file to create user
-#COPY create-user.groovy /usr/share/jenkins/ref/create-user.groovy.d/create-user.groovy
+# Skip initial setup
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
-#COPY jenkins.sh /usr/local/bin/jenkins
+COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/
+COPY default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
 
-RUN echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("user1", "password123")' | java -jar jenkins-cli.jar -s http://localhost:8080/ groovy =
+VOLUME /var/jenkins_home
+

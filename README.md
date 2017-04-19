@@ -1,4 +1,4 @@
-# Jenkins running as Docker Container
+# Jenkins running as Docker Container using Alpine
 
 
 ### Docker Installation
@@ -23,8 +23,3 @@ https://docs.docker.com/compose/install/
 	remove-containers.sh
 
 
-
-	
-	
-
-# docker-alpine-jenkins-pipeline
