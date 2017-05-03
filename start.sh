@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker-compose up -d --force
+docker-compose up -d "$@"

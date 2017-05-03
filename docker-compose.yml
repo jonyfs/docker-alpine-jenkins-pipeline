@@ -7,3 +7,17 @@ services:
     ports:
       - "8080:8080"
     restart: always
+    
+  jenkins-slave:
+    container_name: jenkins-slave
+    hostname: jenkins-slave
+    build: ./jenkins-slave
+    #image: jenkinsci/jnlp-slave
+#    environment: 
+#      JENKINS_URL: http://jenkins:8080
+    restart: always
+    links: 
+      - jenkins
+    depends_on:
+      - jenkins        
+    
