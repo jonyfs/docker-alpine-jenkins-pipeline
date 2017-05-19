@@ -2,7 +2,11 @@ FROM jenkinsci/jenkins:alpine
 
 USER root
 
-RUN apk add --update bash wget maven nodejs && npm install npm@latest -g && rm -rf /var/cache/apk/*
+RUN apk add --update bash wget maven nodejs && \
+    npm install npm@latest -g && \
+    npm install bower -g && \
+    npm install grunt -g && \
+    rm -rf /var/cache/apk/*
 
 USER jenkins
 
@@ -16,6 +20,5 @@ ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Djava.awt.headless=true
 
 COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/
 COPY default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
-COPY agent-jnlp.groovy /usr/share/jenkins/ref/init.groovy.d/
 
 VOLUME /var/jenkins_home
